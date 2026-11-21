@@ -1,0 +1,34 @@
+# ---- MATLAB ----
+*.asv
+*.m~
+*.mex*
+slprj/
+*.autosave
+*.slxc
+codegen/
+octave-workspace
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# ---- IDE / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Generisani podaci ----
+data/processed/*
+results/*
+!**/.gitkeep
+
+# ---- Arhive ----
+*.zip
+*.rar
+*.7z
