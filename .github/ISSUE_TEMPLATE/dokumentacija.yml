@@ -1,0 +1,16 @@
+name: 📝 Dokumentacija
+description: Izvještaj, opis algoritma, README
+title: "[Docs]: "
+labels: ["type: docs"]
+body:
+  - type: textarea
+    id: opis
+    attributes:
+      label: Šta treba dokumentovati?
+    validations:
+      required: true
+  - type: dropdown
+    id: gdje
+    attributes:
+      label: Gdje
+      options: [README, docs/algoritmi, docs/izvjestaj, Drugo]

@@ -1,0 +1,33 @@
+name: 🐛 Bug
+description: Nešto ne radi kako treba
+title: "[Bug]: "
+labels: ["type: bug"]
+body:
+  - type: textarea
+    id: opis
+    attributes:
+      label: Šta se dešava?
+    validations:
+      required: true
+  - type: textarea
+    id: koraci
+    attributes:
+      label: Koraci za reprodukciju
+      value: |
+        1. Pokreni ...
+        2. Sa slikom ...
+        3. Greška ...
+  - type: textarea
+    id: ocekivano
+    attributes:
+      label: Šta je očekivano?
+  - type: textarea
+    id: log
+    attributes:
+      label: Poruka greške
+      render: shell
+  - type: textarea
+    id: slike
+    attributes:
+      label: Screenshot / slika
+      description: Prevuci sliku ovdje
