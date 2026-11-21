@@ -1,0 +1,33 @@
+name: 🧩 Zadatak / funkcionalnost
+description: Novi algoritam, funkcija ili dio projekta
+title: "[Feature]: "
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: opis
+    attributes:
+      label: Opis
+      description: Šta treba uraditi i zašto?
+    validations:
+      required: true
+  - type: dropdown
+    id: jezik
+    attributes:
+      label: Jezik
+      options: [MATLAB, Python, Oba]
+    validations:
+      required: true
+  - type: textarea
+    id: kriteriji
+    attributes:
+      label: Kriteriji završetka
+      value: |
+        - [ ] Implementirano
+        - [ ] Testirano na bar 3 slike
+        - [ ] Dodane slike prije/poslije
+        - [ ] Dokumentovano u docs/algoritmi/
+  - type: textarea
+    id: literatura
+    attributes:
+      label: Literatura / reference
+      description: Knjiga, rad, slajdovi s predavanja...
