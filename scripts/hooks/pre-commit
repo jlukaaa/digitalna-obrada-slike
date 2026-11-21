@@ -1,0 +1,12 @@
+#!/bin/sh
+blocked=$(git diff --cached --name-only --diff-filter=AM | \
+  grep -Ei '(^data/|^results/.*\.(png|jpe?g|tiff?|bmp|gif|mat)$|^models/|\.(png|jpe?g|tiff?|bmp|gif|pth|pt|h5|onnx|ckpt)$)' | \
+  grep -v '^docs/slike/' | grep -v '\.gitkeep$' | grep -v '^data/README\.md$')
+
+if [ -n "$blocked" ]; then
+  echo "❌ COMMIT BLOKIRAN – zaštićeni ili zabranjeni fajlovi:"
+  echo "$blocked"
+  echo "Ukloni ih sa: git restore --staged <fajl>"
+  exit 1
+fi
+exit 0
