@@ -1,9 +1,17 @@
 #!/bin/sh
-while read local_ref local_sha remote_ref remote_sha; do
+# 1) Zabrana direktnog pusha na main i dev
+ulaz=$(cat)
+echo "$ulaz" | while read local_ref local_sha remote_ref remote_sha; do
   case "$remote_ref" in
     refs/heads/main|refs/heads/dev)
-      echo "❌ Direktan push na ${remote_ref#refs/heads/} nije dozvoljen. Koristi feature granu i Pull Request."
+      echo "❌ Direktan push na ${remote_ref#refs/heads/} nije dozvoljen. Koristi feature granu i Pull Request." >&2
       exit 1 ;;
   esac
-done
-exit 0
+done || exit 1
+
+# 2) Git LFS: šalje velike fajlove (dijagrami, PDF...) na LFS server
+command -v git-lfs >/dev/null 2>&1 || {
+  printf >&2 "\nGit LFS nije instaliran, a ovaj repo ga koristi.\nInstaliraj ga i pokreni: git lfs install\n"
+  exit 2
+}
+echo "$ulaz" | git lfs pre-push "$@"
