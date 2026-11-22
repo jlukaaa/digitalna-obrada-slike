@@ -3,6 +3,9 @@ description: Nešto ne radi kako treba
 title: "[Bug]: "
 labels: ["type: bug"]
 body:
+  - type: markdown
+    attributes:
+      value: "⚠️ **Ne prilažite slike iz dataseta** – zaštićeni podaci. Opišite problem riječima ili navedite ime fajla."
   - type: textarea
     id: opis
     attributes:
@@ -15,7 +18,7 @@ body:
       label: Koraci za reprodukciju
       value: |
         1. Pokreni ...
-        2. Sa slikom ...
+        2. Sa slikom (ime fajla) ...
         3. Greška ...
   - type: textarea
     id: ocekivano
@@ -26,8 +29,3 @@ body:
     attributes:
       label: Poruka greške
       render: shell
-  - type: textarea
-    id: slike
-    attributes:
-      label: Screenshot / slika
-      description: Prevuci sliku ovdje

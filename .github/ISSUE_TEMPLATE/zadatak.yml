@@ -23,9 +23,9 @@ body:
       label: Kriteriji završetka
       value: |
         - [ ] Implementirano
-        - [ ] Testirano na bar 3 slike
-        - [ ] Dodane slike prije/poslije
-        - [ ] Dokumentovano u docs/algoritmi/
+        - [ ] Testirano
+        - [ ] Metrike zapisane (ako je primjenjivo)
+        - [ ] Dokumentovano u docs/
   - type: textarea
     id: literatura
     attributes:

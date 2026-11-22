@@ -8,11 +8,13 @@ Closes #
 - [ ] Bug fix
 - [ ] Dokumentacija
 - [ ] Refaktorisanje
+- [ ] Konfiguracija
 
-## Rezultati (prije / poslije)
-<!-- Prevuci slike ovdje -->
+## Rezultati
+<!-- Metrike (accuracy, precision, recall, F1...) i grafici.
+⚠️ NE prevlačiti slike iz dataseta niti predikcije na njima – zaštićeni podaci! -->
 
 ## Checklist
 - [ ] Kod se pokreće bez grešaka
-- [ ] Testirano na više slika
+- [ ] Nema slika iz dataseta, modela ni rezultata u commitu
 - [ ] Ažurirana dokumentacija (ako treba)

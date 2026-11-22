@@ -13,4 +13,4 @@ body:
     id: gdje
     attributes:
       label: Gdje
-      options: [README, docs/algoritmi, docs/izvjestaj, Drugo]
+      options: [README, docs/model, docs/izvjestaj, Drugo]

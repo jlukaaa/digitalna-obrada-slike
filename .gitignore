@@ -32,3 +32,37 @@ results/*
 *.zip
 *.rar
 *.7z
+
+# ==== ZAŠTIĆENI DATASET – NIKAD U GIT ====
+data/**
+!data/**/
+!data/**/.gitkeep
+!data/README.md
+
+# Sve slike svugdje, osim vlastitih dijagrama u docs/slike
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+*.gif
+!docs/slike/**
+
+# Rezultati – samo CSV metrike smiju u git
+results/**
+!results/**/
+!results/**/.gitkeep
+!results/**/*.csv
+
+# Modeli i checkpointi
+models/
+*.pth
+*.pt
+*.h5
+*.onnx
+*.ckpt
+checkpoints/
+runs/
+mlruns/
+wandb/
