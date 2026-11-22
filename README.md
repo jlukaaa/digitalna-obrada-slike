@@ -31,12 +31,6 @@ Slika iz košnice (3 slike/s)
 [5] Odluka po pčeli        objedinjavanje kroz više slika iste pčele
 ```
 
-## Tim
-
-| Ime | GitHub |
-|---|---|
-| Luka Jovetić | [@jlukaaa](https://github.com/jlukaaa) |
-| *(ime kolegice)* | *(username)* |
 
 ## Struktura repozitorija
 
@@ -88,7 +82,7 @@ koji ne ide u git.
 U kodu:
 ```matlab
 cfg = ucitajKonfiguraciju();
-slike = dir(fullfile(cfg.putanje.labV1, '*.jpg'));
+slike = dir(fullfile(cfg.putanje.labV1, 'images', 'train', 'V1_*.jpg'));
 ```
 
 `ucitajKonfiguraciju` javlja grešku ako fajl ili folder sa datasetom ne postoji,
