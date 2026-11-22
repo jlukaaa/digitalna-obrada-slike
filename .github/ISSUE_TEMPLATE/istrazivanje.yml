@@ -1,0 +1,20 @@
+name: 🔬 Istraživanje / eksperiment
+description: Poređenje metoda, testiranje parametara
+title: "[Research]: "
+labels: ["type: research"]
+body:
+  - type: textarea
+    id: pitanje
+    attributes:
+      label: Istraživačko pitanje
+      placeholder: "Npr. Da li Otsu ili adaptivni threshold daje bolju segmentaciju na našim slikama?"
+    validations:
+      required: true
+  - type: textarea
+    id: metode
+    attributes:
+      label: Metode koje se porede
+  - type: textarea
+    id: zakljucak
+    attributes:
+      label: Zaključak (popuniti na kraju)

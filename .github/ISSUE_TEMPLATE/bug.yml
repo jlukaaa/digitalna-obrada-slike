@@ -1,0 +1,31 @@
+name: 🐛 Bug
+description: Nešto ne radi kako treba
+title: "[Bug]: "
+labels: ["type: bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "⚠️ **Ne prilažite slike iz dataseta** – zaštićeni podaci. Opišite problem riječima ili navedite ime fajla."
+  - type: textarea
+    id: opis
+    attributes:
+      label: Šta se dešava?
+    validations:
+      required: true
+  - type: textarea
+    id: koraci
+    attributes:
+      label: Koraci za reprodukciju
+      value: |
+        1. Pokreni ...
+        2. Sa slikom (ime fajla) ...
+        3. Greška ...
+  - type: textarea
+    id: ocekivano
+    attributes:
+      label: Šta je očekivano?
+  - type: textarea
+    id: log
+    attributes:
+      label: Poruka greške
+      render: shell
