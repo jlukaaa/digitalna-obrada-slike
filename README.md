@@ -76,7 +76,23 @@ Hookovi blokiraju commit slika i fajlova iz `data/`, kao i direktan push na `mai
 
 ## Pokretanje
 
-*U izradi.* Konfiguracija putanja do dataseta: issue #4.
+### Lokalna konfiguracija (jednom)
+
+Putanje do dataseta su različite na svakom računaru, pa se drže u lokalnom fajlu
+koji ne ide u git.
+
+1. Kopiraj `src/matlab/config_primjer.m` u `src/matlab/config_lokalno.m`
+2. U kopiji promijeni prvu liniju u `function cfg = config_lokalno()`
+3. Upiši svoje putanje – dataset i izlazi moraju biti **van repozitorija**
+
+U kodu:
+```matlab
+cfg = ucitajKonfiguraciju();
+slike = dir(fullfile(cfg.putanje.labV1, '*.jpg'));
+```
+
+`ucitajKonfiguraciju` javlja grešku ako fajl ili folder sa datasetom ne postoji,
+pravi izlazne foldere ako ih nema i upozorava ako je izlaz unutar repoa.
 
 ## Kako radimo
 
