@@ -100,6 +100,36 @@ slike = sorted((cfg["putanje"]["lab_v1"] / "images" / "train").glob("V1_*.jpg"))
 `ucitaj_konfiguraciju` javlja grešku ako fajl ili folder sa datasetom ne postoji,
 pravi izlazne foldere ako ih nema i upozorava ako je izlaz unutar repoa.
 
+### Izdvajanje pčela iz slika košnice (faza 2)
+
+Iz slika fiksne kamere izdvaja pojedinačne pčele, okreće ih glavom gore i
+razvrstava po kvalitetu. Ulaz je `putanje.kosnica` (podfolder po danu),
+izlaz `putanje.predobrada`.
+
+```bash
+# svi dani; --sablon = folder sa 20-30 pčela sigurno okrenutih glavom gore
+python -m varoa.predobrada --sablon "<folder sa šablonom>"
+
+# statistika jednog dana (kategorije, dužina, oštrina) + histogrami analiza.png
+python -m varoa.analiza "<predobrada>/<dan>_2"
+
+# najbolji izrezi svake pčele iz svih dana u jedan folder
+python -m varoa.izbor --izlaz "<novi folder>" --max-po-tragu 4 --razmak 3
+```
+
+Za svaki dan nastaju `<dan>/` (prvi prolaz) i `<dan>_2/` (konačno: drugi prolaz
+sa šablonom napravljenim iz kretanja pčela). U `<dan>_2/`:
+
+| Folder / fajl | Sadržaj |
+|---|---|
+| `pcele/` | dobri izrezi, glava gore |
+| `provjeriti/` | nesiguran smjer glave |
+| `mutne/` | zamućenje od pokreta |
+| `spojene/` | više pčela u jednoj maski |
+| `pcele_ispravljeno.csv` | podaci o svakom izrezu + trag (ista pčela kroz vrijeme) i izvor smjera glave |
+
+Parametri (podešeni za kameru C): `varoa.izdvajanje.Opcije`.
+
 ## Kako radimo
 
 Pravila rada (grane, commitovi, Pull Requestovi, tabla): [CONTRIBUTING.md](CONTRIBUTING.md).
