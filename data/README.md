@@ -21,24 +21,26 @@ Podaci stoje **van repozitorija**, bilo gdje na disku. Preporučena struktura:
 
 ```
 <bilo gdje>/
-├── varoa_dataset/           ← laboratorijski dataset (cfg.putanje.labV1)
+├── varoa_dataset/           ← laboratorijski dataset (putanje.lab_v1)
 │   ├── data.yaml
 │   ├── images/{train,val}/
 │   └── labels/{train,val}/
-├── kosnica_ulaz/            ← sirove slike iz košnice (cfg.putanje.kosnica)
+├── kosnica_ulaz/            ← sirove slike iz košnice (putanje.kosnica)
 │   ├── 2026-07-28/
 │   ├── 2026-08-01/
 │   └── ...
-├── kosnica_izlaz/           ← izrezi pčela (cfg.putanje.predobrada)
-├── modeli/                  ← istrenirane mreže (cfg.putanje.modeli)
-└── rezultati/               ← slike rezultata (cfg.putanje.rezultati)
+├── kosnica_izlaz/           ← izrezi pčela (putanje.predobrada)
+├── modeli/                  ← istrenirane mreže (putanje.modeli)
+└── rezultati/               ← slike rezultata (putanje.rezultati)
 ```
 
-Putanje se upisuju u `src/matlab/config_lokalno.m` (uputstvo u glavnom README-u,
-sekcija *Pokretanje*). Kod ih čita sa:
+Putanje se upisuju u `config_lokalno.yaml` u korijenu repoa (uputstvo u glavnom
+README-u, sekcija *Pokretanje*). Kod ih čita sa:
 
-```matlab
-cfg = ucitajKonfiguraciju();
+```python
+from varoa.konfiguracija import ucitaj_konfiguraciju
+
+cfg = ucitaj_konfiguraciju()
 ```
 
 Opis samih podataka: [`docs/dataset.md`](../docs/dataset.md).

@@ -117,7 +117,7 @@ Klase za pčele iz košnice:
 - Slike, izrezi pčela, predikcije i istrenirani modeli **nikad** ne ulaze u repozitorij.
 - U issue, PR i komentare se **ne stavljaju** slike pčela.
 - U repozitorij smiju samo **brojevi** (`.csv` u `results/`) i vlastiti dijagrami (`docs/slike/`).
-- Lokalne putanje se podešavaju u `src/matlab/config_lokalno.m` (vidi README).
+- Lokalne putanje se podešavaju u `config_lokalno.yaml` (vidi README).
 
 ## Otvorena pitanja
 
