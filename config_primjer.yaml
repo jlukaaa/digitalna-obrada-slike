@@ -1,0 +1,19 @@
+# Šablon lokalne konfiguracije. OVAJ FAJL SE NE MIJENJA.
+#
+# Postupak (jednom, na svakom računaru):
+#   1. kopiraj ovaj fajl u korijen repoa pod imenom  config_lokalno.yaml
+#   2. upiši svoje putanje
+#
+# config_lokalno.yaml je u .gitignore i nikad ne ide u repozitorij.
+# Sve putanje moraju biti VAN repozitorija (zaštićeni podaci).
+# Na Windowsu koristi jednostruke navodnike, npr. 'C:\Podaci\varoa'.
+
+putanje:
+  # ---- Dataset ----
+  lab_v1: 'C:\Podaci\varoa\varoa_dataset'      # folder sa images/, labels/, data.yaml
+  kosnica: 'C:\Podaci\varoa\kosnica_ulaz'      # sirove slike, podfolderi po danima
+
+  # ---- Izlazi (sadrže izreze pčela – također van repoa) ----
+  predobrada: 'C:\Podaci\varoa\predobrada'
+  modeli: 'C:\Podaci\varoa\modeli'
+  rezultati: 'C:\Podaci\varoa\rezultati'

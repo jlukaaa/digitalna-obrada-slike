@@ -1,0 +1,22 @@
+# Osnovno okruženje projekta (Python 3.10+)
+# Instalacija:  pip install -r requirements.txt
+#
+# PyTorch se dodaje u fazi 5 (Klasifikator) – instalira se posebno,
+# zavisno od toga ima li računar NVIDIA grafičku kartu.
+
+numpy
+scipy
+opencv-python
+scikit-image
+pandas
+matplotlib
+pyyaml
+tqdm
+
+# Eksperimenti
+jupyter
+nbstripout
+
+# Paket projekta (src/python/varoa) – instalira se u "editable" modu,
+# pa izmjene u kodu odmah važe bez ponovne instalacije
+-e .

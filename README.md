@@ -36,8 +36,8 @@ Slika iz košnice (3 slike/s)
 
 | Folder | Sadržaj |
 |---|---|
-| `src/matlab/` | MATLAB implementacija |
-| `src/python/` | Python implementacija (ako bude potrebna) |
+| `src/python/varoa/` | Python paket projekta (kod koji se ponovo koristi) |
+| `notebooks/` | Jupyter notebooki za eksperimente (bez izlaza – vidi `notebooks/README.md`) |
 | `tests/` | testovi |
 | `docs/` | dokumentacija i izvještaj |
 | `docs/slike/` | **samo** vlastiti dijagrami i grafici (bez slika iz dataseta) |
@@ -59,14 +59,25 @@ Detaljan opis: `docs/dataset.md`. Gdje se dataset nabavlja: `data/README.md`.
 
 ## Jednokratno podešavanje
 
+Potrebno: **Python 3.10+**, Git, Git LFS. Preporuka: VS Code sa ekstenzijama *Python* i *Jupyter*.
+
 ```bash
 git clone git@github.com:jlukaaa/digitalna-obrada-slike.git
 cd digitalna-obrada-slike
 git lfs install
 git config core.hooksPath scripts/hooks
+
+python -m venv .venv
+source .venv/Scripts/activate      # Windows (Git Bash); Linux/macOS: source .venv/bin/activate
+pip install -r requirements.txt
+nbstripout --install
 ```
 
-Hookovi blokiraju commit slika i fajlova iz `data/`, kao i direktan push na `main` i `dev`.
+- Hookovi blokiraju commit slika, nizova (`.npy`, `.pkl`...) i fajlova iz `data/`,
+  notebooka sa slikama u izlazima, kao i direktan push na `main` i `dev`.
+- `nbstripout` briše izlaze notebooka pri commitu – **obavezno**, jer notebook
+  čuva prikazane slike pčela unutar `.ipynb` fajla.
+- Okruženje se aktivira u svakom novom terminalu: `source .venv/Scripts/activate`.
 
 ## Pokretanje
 
@@ -75,17 +86,18 @@ Hookovi blokiraju commit slika i fajlova iz `data/`, kao i direktan push na `mai
 Putanje do dataseta su različite na svakom računaru, pa se drže u lokalnom fajlu
 koji ne ide u git.
 
-1. Kopiraj `src/matlab/config_primjer.m` u `src/matlab/config_lokalno.m`
-2. U kopiji promijeni prvu liniju u `function cfg = config_lokalno()`
-3. Upiši svoje putanje – dataset i izlazi moraju biti **van repozitorija**
+1. Kopiraj `config_primjer.yaml` u `config_lokalno.yaml` (oba u korijenu repoa)
+2. Upiši svoje putanje – dataset i izlazi moraju biti **van repozitorija**
 
-U kodu:
-```matlab
-cfg = ucitajKonfiguraciju();
-slike = dir(fullfile(cfg.putanje.labV1, 'images', 'train', 'V1_*.jpg'));
+U kodu (i u notebookima):
+```python
+from varoa.konfiguracija import ucitaj_konfiguraciju
+
+cfg = ucitaj_konfiguraciju()
+slike = sorted((cfg["putanje"]["lab_v1"] / "images" / "train").glob("V1_*.jpg"))
 ```
 
-`ucitajKonfiguraciju` javlja grešku ako fajl ili folder sa datasetom ne postoji,
+`ucitaj_konfiguraciju` javlja grešku ako fajl ili folder sa datasetom ne postoji,
 pravi izlazne foldere ako ih nema i upozorava ako je izlaz unutar repoa.
 
 ## Kako radimo
@@ -94,11 +106,14 @@ Pravila rada (grane, commitovi, Pull Requestovi, tabla): [CONTRIBUTING.md](CONTR
 
 Napredak se prati na [Projects tabli](https://github.com/users/jlukaaa/projects) po fazama:
 
-| Faza | Sadržaj |
-|---|---|
-| v0.1 | Setup i dataset |
-| v0.2 | Detekcija i praćenje pčela |
-| v0.3 | Normalizacija i označavanje |
-| v0.4 | Klasifikator |
-| v0.5 | Evaluacija |
-| v1.0 | Izvještaj i predaja |
+| # | Faza (milestone) | Release |
+|---|---|---|
+| 1 | Priprema projekta i analiza podataka | `v0.1` |
+| 2 | Izdvajanje pčela iz slika košnice | `v0.2` |
+| 3 | Ujednačavanje slika iz laboratorije i košnice | `v0.3` |
+| 4 | Priprema skupova za učenje | `v0.4` |
+| 5 | Klasifikator | `v0.5` |
+| 6 | Evaluacija i analiza | `v0.6` |
+| 7 | Izvještaj i prezentacija | `v1.0` |
+
+Opis svake faze (zadatak, rezultat, kada je gotova) je u opisu milestonea na GitHubu.

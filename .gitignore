@@ -67,4 +67,17 @@ runs/
 mlruns/
 wandb/
 # ---- Lokalna konfiguracija (putanje do dataseta) ----
+config_lokalno.yaml
 src/matlab/config_lokalno.m
+
+# ---- Nizovi i serijalizovani objekti (mogu sadržavati slike iz dataseta) ----
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.joblib
+
+# ---- Python paket (pip install -e .) ----
+*.egg-info/
+build/
+dist/

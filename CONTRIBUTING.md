@@ -91,7 +91,7 @@ Repozitorij je javan, a dataset je zaštićen. Zato:
 
 - **Nikad** ne commitovati slike iz dataseta, izreze pčela, predikcije na njima ni težine modela.
 - **Nikad** ne prevlačiti slike pčela u issue, PR ili komentar – GitHub ih hostuje javno.
-- Dataset se drži **van repozitorija**; putanje se podešavaju lokalno (issue #4).
+- Dataset se drži **van repozitorija**; putanje se podešavaju lokalno (`config_lokalno.yaml`).
 - U `results/` u git ulaze samo `.csv` fajlovi sa metrikama.
 - U `docs/slike/` samo vlastiti dijagrami i grafici.
 - `pre-commit` hook blokira slike i fajlove iz `data/`. Ne zaobilaziti ga (`--no-verify`).
@@ -99,12 +99,27 @@ Repozitorij je javan, a dataset je zaštićen. Zato:
 Ako zaštićeni fajl ipak završi u commitu, **ne pushati** i javiti drugom članu tima.
 Ako je već pushan, javiti odmah – brisanje iz historije traži posebne korake.
 
-## MATLAB
+## Python
 
-- Funkcije: `camelCase`, jedna javna funkcija po fajlu (`medianFilter.m`).
-- Na vrhu svake funkcije help komentar: šta radi, ulazi, izlazi.
-- Bez apsolutnih putanja u kodu – putanje dolaze iz lokalne konfiguracije.
-- Parametri kao `struct` sa podrazumijevanim vrijednostima.
+Projekat se radi u Pythonu (od 23.11.2026; do tada eksperimentalno u MATLAB-u).
+
+- Stil: [PEP 8](https://peps.python.org/pep-0008/) – funkcije i varijable `snake_case`,
+  klase `PascalCase`, konstante `VELIKA_SLOVA`.
+- Svaka funkcija ima docstring: šta radi, ulazi, izlazi.
+- Kod koji se ponovo koristi ide u paket `src/python/varoa/` i importuje se sa
+  `from varoa.<modul> import ...` (paket je instaliran sa `pip install -e .`).
+- Bez apsolutnih putanja u kodu – putanje dolaze iz `ucitaj_konfiguraciju()`.
+- Putanje kao `pathlib.Path`, ne kao stringovi.
+- Nova biblioteka → dodati je u `requirements.txt` u istom PR-u.
+
+## Jupyter notebooki
+
+- Notebooki su za **eksperimente** (`notebooks/<broj-issuea>_<opis>.ipynb`).
+- **nbstripout mora biti uključen** (`nbstripout --install`) – briše izlaze pri commitu.
+  Notebook inače čuva prikazane slike pčela unutar `.ipynb` fajla.
+- `pre-commit` hook blokira notebook u kojem je ostala slika.
+- Rezultati u brojevima → `results/*.csv`; figure sa pčelama samo lokalno.
+- Kad se kod iz notebooka pokaže korisnim, seli se u `src/python/varoa/`.
 
 ## Lokalni alati koji ne idu u git
 

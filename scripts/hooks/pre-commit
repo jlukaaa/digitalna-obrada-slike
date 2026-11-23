@@ -1,12 +1,32 @@
 #!/bin/sh
+# Blokira commit zaštićenih podataka.
+
+# 1) Fajlovi koji nikad ne smiju u git
 blocked=$(git diff --cached --name-only --diff-filter=AM | \
-  grep -Ei '(^data/|^results/.*\.(png|jpe?g|tiff?|bmp|gif|mat)$|^models/|\.(png|jpe?g|tiff?|bmp|gif|pth|pt|h5|onnx|ckpt)$)' | \
+  grep -Ei '(^data/|^results/.*\.(png|jpe?g|tiff?|bmp|gif|mat)$|^models/|\.(png|jpe?g|tiff?|bmp|gif|pth|pt|h5|onnx|ckpt|npy|npz|pkl|pickle|joblib)$)' | \
   grep -v '^docs/slike/' | grep -v '\.gitkeep$' | grep -v '^data/README\.md$')
 
 if [ -n "$blocked" ]; then
   echo "❌ COMMIT BLOKIRAN – zaštićeni ili zabranjeni fajlovi:"
   echo "$blocked"
   echo "Ukloni ih sa: git restore --staged <fajl>"
+  exit 1
+fi
+
+# 2) Notebooki sa slikama u izlazima (ako nbstripout nije uključen)
+notebooki=$(git diff --cached --name-only --diff-filter=AM | grep -Ei '\.ipynb$')
+sa_slikom=""
+for nb in $notebooki; do
+  if git show ":$nb" 2>/dev/null | grep -Eq '"image/(png|jpeg|gif|svg\+xml)"'; then
+    sa_slikom="$sa_slikom
+$nb"
+  fi
+done
+
+if [ -n "$sa_slikom" ]; then
+  echo "❌ COMMIT BLOKIRAN – notebook sadrži slike u izlazima:$sa_slikom"
+  echo "Uključi nbstripout (jednom):  nbstripout --install"
+  echo "pa ponovo:                    git add <notebook>"
   exit 1
 fi
 exit 0
