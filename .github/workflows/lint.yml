@@ -1,0 +1,27 @@
+name: Provjera koda
+
+# ruff: neiskorišteni importi, nedefinisana imena, sintaksne greške...
+# Pravila su u pyproject.toml ([tool.ruff]).
+
+# Radi na svakom PR-u (bez filtera po putanjama), da obavezna provjera
+# nikad ne ostane "na čekanju" kod PR-ova koji ne diraju kod.
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+jobs:
+  ruff:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check --output-format=github .

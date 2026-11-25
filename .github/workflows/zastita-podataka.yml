@@ -1,0 +1,27 @@
+name: Zaštita podataka
+
+# Isto pravilo kao lokalni pre-commit hook, ali se ne može zaobići.
+# Obara PR ako u repou ima slika, podataka iz data/, modela, nizova
+# ili notebooka sa slikama u izlazima.
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+jobs:
+  provjera:
+    name: Nema zaštićenih podataka
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false        # sadržaj LFS fajlova ne treba, samo imena
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/provjeri_podatke.py

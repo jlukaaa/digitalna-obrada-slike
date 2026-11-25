@@ -47,6 +47,8 @@ Format [Conventional Commits](https://www.conventionalcommits.org/): `tip(oblast
 | `test` | testovi |
 | `chore` | konfiguracija, alati, održavanje |
 | `perf` | ubrzanje |
+| `ci` | GitHub Actions |
+| `release` | PR `dev → main` na kraju faze |
 
 Primjeri:
 ```
@@ -61,6 +63,21 @@ docs: opis dataseta
 - Opis prema šablonu, uvijek sa `Closes #<broj>`.
 - Jedan PR = jedan issue. Veliki posao podijeliti na sub-issue.
 - Merge isključivo **Squash and merge**.
+
+## Automatske provjere (GitHub Actions)
+
+Na svakom PR-u prema `dev` i `main` pokreću se četiri provjere. PR se može spojiti tek
+kad su sve zelene.
+
+| Provjera | Šta radi | Lokalno |
+|---|---|---|
+| **Zaštita podataka** | obara PR ako u repou ima slika, `data/`, modela, nizova ili notebooka sa slikama | `python scripts/provjeri_podatke.py` |
+| **Provjera koda** | `ruff`: neiskorišteni importi, nedefinisana imena, sintaksa | `ruff check .` |
+| **Testovi** | `pytest` na umjetnim slikama (`tests/`) | `pytest` |
+| **Naslov i opis PR-a** | naslov `tip: opis`; prema `dev` u opisu `Closes #` ili `Refs #` | – |
+
+Novi kod u `src/python/varoa/` → po mogućnosti i test u `tests/`. Testovi nikad ne koriste
+prave slike – samo umjetne, nacrtane u samom testu (`tests/conftest.py`).
 
 ## Tabla (Projects)
 
