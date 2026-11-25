@@ -1,5 +1,9 @@
 # Detekcija varoe na pčelama
 
+[![Zaštita podataka](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/zastita-podataka.yml/badge.svg?branch=dev)](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/zastita-podataka.yml)
+[![Testovi](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/testovi.yml/badge.svg?branch=dev)](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/testovi.yml)
+[![Provjera koda](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/lint.yml/badge.svg?branch=dev)](https://github.com/jlukaaa/digitalna-obrada-slike/actions/workflows/lint.yml)
+
 Projekat iz predmeta **Digitalna obrada slike**.
 
 Cilj je automatski prepoznati pčele zaražene grinjom *Varroa destructor* na slikama

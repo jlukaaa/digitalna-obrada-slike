@@ -1,0 +1,30 @@
+name: Testovi
+
+# pytest na UMJETNIM slikama (pravi dataset je zaštićen i nije na GitHubu).
+
+# Radi na svakom PR-u (bez filtera po putanjama), da obavezna provjera
+# nikad ne ostane "na čekanju" kod PR-ova koji ne diraju kod.
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      # opencv-python-headless: ista biblioteka, bez grafičkog prikaza (server nema ekran)
+      - run: |
+          pip install numpy scipy opencv-python-headless scikit-image pandas matplotlib pyyaml tqdm pytest
+          pip install --no-deps -e .
+      - run: pytest -v

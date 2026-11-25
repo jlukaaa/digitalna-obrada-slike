@@ -10,3 +10,13 @@ requires-python = ">=3.10"
 
 [tool.setuptools.packages.find]
 where = ["src/python"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]   # pycodestyle greške/upozorenja + pyflakes
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
