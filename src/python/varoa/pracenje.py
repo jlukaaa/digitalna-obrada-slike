@@ -36,10 +36,19 @@ from .izdvajanje import FOLDERI
 
 @dataclass
 class OpcijePracenja:
+    # --- povezivanje iste pčele kroz slike ---
     max_razmak: float = 1.5          # s, najveći razmak slika u istom tragu
     max_pomak_duzina: float = 1.0    # najveći pomak po sekundi, u dužinama pčele
+    pomak_tolerancija: float = 0.3   # + stalni dio dozvoljenog pomaka (dužine pčele)
+    max_razlika_ose: float | None = None    # stepeni; osa tijela se ne smije naglo okrenuti
+    max_odnos_duzine: float | None = None   # npr. 1.33: dužina tijela slična (ista pčela)
+    # --- glasanje iz kretanja ---
     min_pomak_duzina: float = 0.12   # najmanji pomak koji se računa kao kretanje
     min_poravnanje: float = 0.6      # |cos| ugla između kretanja i tijela
+    max_dt_glasa: float | None = None       # s; kretanje samo između bliskih slika
+    min_neto_glasova: int = 1        # koliko više glasova "naprijed" nego "nazad"
+    sirenje_na_susjede: bool = True  # pčela koja miruje dobija smjer od susjedne slike
+    # --- ostalo ---
     fps: float = 3                   # ako vrijeme nije u imenu slike
     min_jacina_traga: float = 0.5    # slaganje slika u tragu za premještanje u pcele/
 
@@ -56,15 +65,14 @@ def vrijeme_iz_imena(ime: str) -> float:
     return h * 3600 + m * 60 + s + ms / 1000
 
 
-def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = None) -> pd.DataFrame:
-    """Ispravi smjer glave u izlaznom folderu ``izdvoji_pcele``. Vraća tabelu sa tragovima."""
-    o = opcije or OpcijePracenja()
-    izlaz = Path(izlaz)
-    t = pd.read_csv(izlaz / "pcele.csv")
+def odredi_smjer(t: pd.DataFrame, o: OpcijePracenja | None = None) -> dict:
+    """Odluka o smjeru glave za svaki red ``pcele.csv`` – bez diranja fajlova.
+
+    Vraća rječnik: ``trag``, ``okreni`` (bool po redu), ``izvor_smjera``
+    ('kretanje' / 'susjed' / 'trag' / 'nepoznato'), ``sigurno_iz_traga``,
+    ``broj_tragova``. Koristi je ``ispravi_smjer_kretanjem`` i ocjena podešavanja."""
+    o = o or OpcijePracenja()
     n = len(t)
-    if n == 0:
-        print("Nema izreza.")
-        return t
 
     # ---- vrijeme svake detekcije ----
     izvori = sorted(t["izvor"].unique())
@@ -81,6 +89,7 @@ def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = N
     pos = t[["x_centar", "y_centar"]].to_numpy(float)
     duz = t["duzina_px"].to_numpy(float)
     u_tragu = (t["kategorija"] != "spojene").to_numpy()
+    osa = np.degrees(u) % 180                                # osa tijela bez smjera
 
     # ---- praćenje: pohlepno povezivanje najbližih detekcija ----
     trag = np.zeros(n, int)
@@ -96,8 +105,13 @@ def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = N
                 continue
             for d in ovdje:
                 rast = np.linalg.norm(pos[d] - pos[zi])
-                if rast <= (0.3 + o.max_pomak_duzina * dt) * max(duz[d], duz[zi]):
-                    kandidati.append((rast, d, k + 1))
+                if rast > (o.pomak_tolerancija + o.max_pomak_duzina * dt) * max(duz[d], duz[zi]):
+                    continue
+                if o.max_odnos_duzine and max(duz[d], duz[zi]) / max(min(duz[d], duz[zi]), 1) > o.max_odnos_duzine:
+                    continue
+                if o.max_razlika_ose is not None and _razlika_ose(osa[d], osa[zi]) > o.max_razlika_ose:
+                    continue
+                kandidati.append((rast, d, k + 1))
         for _, d, k in sorted(kandidati):
             if trag[d] == 0 and not (trag[ovdje] == k).any():
                 trag[d] = k
@@ -114,6 +128,8 @@ def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = N
         clanovi = np.nonzero(trag == k)[0]
         clanovi = clanovi[np.argsort(vrijeme[clanovi])]
         for a, b in zip(clanovi[:-1], clanovi[1:]):
+            if o.max_dt_glasa is not None and vrijeme[b] - vrijeme[a] > o.max_dt_glasa:
+                continue
             pomak = pos[b] - pos[a]
             d = np.linalg.norm(pomak)
             if d < o.min_pomak_duzina * (duz[a] + duz[b]) / 2:
@@ -128,13 +144,13 @@ def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = N
     okreni = np.zeros(n, bool)
     izvor_smjera = np.array(["nepoznato"] * n, dtype=object)
     ispravna_glava = np.full((n, 2), np.nan)
-    for d in np.nonzero(glas != 0)[0]:
+    for d in np.nonzero(np.abs(glas) >= o.min_neto_glasova)[0]:
         okreni[d] = glas[d] < 0
         izvor_smjera[d] = "kretanje"
         ispravna_glava[d] = glava[d] * (-1 if okreni[d] else 1)
 
     # pčele koje miruju: smjer od najbliže slike istog traga u kojoj se kretala
-    for d in np.nonzero((glas == 0) & (trag > 0))[0]:
+    for d in np.nonzero((izvor_smjera == "nepoznato") & (trag > 0) & o.sirenje_na_susjede)[0]:
         ostali = np.nonzero((trag == trag[d]) & ~np.isnan(ispravna_glava[:, 0]))[0]
         if ostali.size == 0:
             continue
@@ -169,6 +185,29 @@ def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = N
                 okreni[d] = c < 0
                 izvor_smjera[d] = "trag"
                 sigurno_iz_traga[d] = clanovi.size >= 3 and jacina >= o.min_jacina_traga
+
+    return {"trag": trag, "okreni": okreni, "izvor_smjera": izvor_smjera,
+            "sigurno_iz_traga": sigurno_iz_traga, "broj_tragova": broj_tragova}
+
+
+def _razlika_ose(a: float, b: float) -> float:
+    """Razlika dvije ose (0..180°) bez obzira na smjer: 0..90°."""
+    d = abs(a - b) % 180
+    return min(d, 180 - d)
+
+
+def ispravi_smjer_kretanjem(izlaz: str | Path, opcije: OpcijePracenja | None = None) -> pd.DataFrame:
+    """Ispravi smjer glave u izlaznom folderu ``izdvoji_pcele``. Vraća tabelu sa tragovima."""
+    o = opcije or OpcijePracenja()
+    izlaz = Path(izlaz)
+    t = pd.read_csv(izlaz / "pcele.csv")
+    n = len(t)
+    if n == 0:
+        print("Nema izreza.")
+        return t
+    r = odredi_smjer(t, o)
+    trag, okreni, izvor_smjera = r["trag"], r["okreni"], r["izvor_smjera"]
+    sigurno_iz_traga, broj_tragova = r["sigurno_iz_traga"], r["broj_tragova"]
 
     # ---- primjena: rotacija fajlova i premještanje iz provjeriti/ ----
     ispravljeno = np.zeros(n, int)
