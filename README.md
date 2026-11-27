@@ -134,6 +134,24 @@ sa šablonom napravljenim iz kretanja pčela). U `<dan>_2/`:
 
 Parametri (podešeni za kameru C): `varoa.izdvajanje.Opcije`.
 
+### Geometrijsko ujednačavanje (faza 3)
+
+Laboratorijske slike (V1) i izrezi iz košnice u isti format: **224×224, tijelo
+vertikalno, glava gore, dužina tijela 80% visine**. YOLO oznake (grinja, pčela)
+se transformišu zajedno sa slikom.
+
+```bash
+# V1: folder sa images/ i labels/
+python -m varoa.geometrija v1 --ulaz "<v1 folder>" --izlaz "<novi folder>" [--sablon "<V1 pčele glavom gore>"]
+
+# košnica: izrezi iz izdvajanja (640x640) -> 224x224
+python -m varoa.geometrija kosnica --ulaz "<izrezi>" --izlaz "<novi folder>"
+```
+
+V1 izlaz: `images/` (sigurno glavom gore), `provjeriti/` (nesiguran smjer glave),
+`labels/` (oznake u novom kadru) i `geometrija_v1.csv` (ugao, skala, veličina grinje u px).
+Pozadina ostaje kakva jeste – siva pozadina je sljedeći korak (3.4).
+
 ## Kako radimo
 
 Pravila rada (grane, commitovi, Pull Requestovi, tabla): [CONTRIBUTING.md](CONTRIBUTING.md).
