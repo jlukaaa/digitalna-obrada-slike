@@ -152,6 +152,23 @@ V1 izlaz: `images/` (sigurno glavom gore), `provjeriti/` (nesiguran smjer glave)
 `labels/` (oznake u novom kadru) i `geometrija_v1.csv` (ugao, skala, veličina grinje u px).
 Pozadina ostaje kakva jeste – siva pozadina je sljedeći korak (3.4).
 
+### Maska tijela i siva pozadina (faza 3)
+
+Na izrezima 224×224 iz geometrije: oba izvora polaze od iste elipse očekivanog tijela.
+V1 (zelena pozadina): ne-zeleno i tamnije ili obojeno, pa konveksni omotač. Košnica
+(drvo je smeđe kao pčela, krila providna): GrabCut po boji u L\*a\*b\*, pa zaglađivanje.
+Pozadina postaje siva `[128,128,128]` sa mekim prelazom. Maska se snima posebno, jer detektor kandidata
+traži varou samo na tijelu.
+
+```bash
+python -m varoa.pozadina v1      --ulaz "<izlaz geometrije v1>"      --izlaz "<novi folder>"
+python -m varoa.pozadina kosnica --ulaz "<izlaz geometrije kosnica>" --izlaz "<novi folder>"
+```
+
+Izlaz: `images/` (maska u redu), `provjeriti/` (sumnjiva maska, razlog u CSV-u),
+`maske/` (255 = tijelo), `labels/` (samo V1, nepromijenjene) i `pozadina.csv`
+(udio, visina i solidnost maske, a za V1 i koliko grinja je unutar maske).
+
 ## Kako radimo
 
 Pravila rada (grane, commitovi, Pull Requestovi, tabla): [CONTRIBUTING.md](CONTRIBUTING.md).
